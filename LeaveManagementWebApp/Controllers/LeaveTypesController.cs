@@ -9,9 +9,12 @@ using LeaveManagementWebApp.Data;
 using AutoMapper;
 using LeaveManagementWebApp.Models;
 using LeaveManagementWebApp.Contracts;
+using Microsoft.AspNetCore.Authorization;
+using LeaveManagementWebApp.Constants;
 
 namespace LeaveManagementWebApp.Controllers
 {
+    [Authorize(Roles = Roles.Administrator)]
     public class LeaveTypesController : Controller
     {
         private readonly IMapper mapper;
@@ -37,7 +40,7 @@ namespace LeaveManagementWebApp.Controllers
             if (leaveType == null)
             {
                 return NotFound();
-            } 
+            }
             var leaveTypeVm = mapper.Map<LeaveTypesVM>(leaveType);
             return View(leaveTypeVm);
         }
@@ -57,7 +60,7 @@ namespace LeaveManagementWebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                var leaveType = mapper.Map<LeaveType>(leaveTypeVm);               
+                var leaveType = mapper.Map<LeaveType>(leaveTypeVm);
                 await leaveTypeRepository.AddAsync(leaveType);
                 return RedirectToAction(nameof(Index));
             }
@@ -66,7 +69,7 @@ namespace LeaveManagementWebApp.Controllers
 
         // GET: LeaveTypes/Edit/5
         public async Task<IActionResult> Edit(int? id)
-        {           
+        {
             var leaveType = await leaveTypeRepository.GetAsync(id);
             if (leaveType == null)
             {
@@ -93,11 +96,11 @@ namespace LeaveManagementWebApp.Controllers
                 try
                 {
                     var leaveType = mapper.Map<LeaveType>(leaveTypeVm);
-                    await leaveTypeRepository.UpdateAsync(leaveType);                    
+                    await leaveTypeRepository.UpdateAsync(leaveType);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (! await leaveTypeRepository.Exists(leaveTypeVm.Id))
+                    if (!await leaveTypeRepository.Exists(leaveTypeVm.Id))
                     {
                         return NotFound();
                     }
@@ -134,7 +137,7 @@ namespace LeaveManagementWebApp.Controllers
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
-        {           
+        {
             await leaveTypeRepository.DeleteAsync(id);
             return RedirectToAction(nameof(Index));
         }
@@ -142,6 +145,13 @@ namespace LeaveManagementWebApp.Controllers
         //private async Task<bool> LeaveTypeExists(int id)
         //{
         //    return await leaveTypeRepository.Exists(id); ;
+        //}
+
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> AllocateLeave(int id)
+        //{           
+        //    return NotImplementedException();
         //}
     }
 }
