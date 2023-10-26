@@ -46,15 +46,14 @@
     <input type="hidden" id="LeaveTypeId" name="Id" />
 </form>
 
-<form id="allocateForm" asp-action="AllocateLeave">
-    <input type="hidden" id="LeaveTypeId" name="Id" />
+<form id="allocationForm" asp-action="AllocateLeave">
+    <input type="hidden" id="LeaveTypeIdAllocate" name="Id" />
 </form>
 
 @section Scripts{
     <script>
         $(function(){
-
-            $('.table').DataTable();
+           
 
             $('.deleteBtn').click(function(e){
                swal({
@@ -83,8 +82,8 @@
                     if (confirm) {
                         var btn = $(this);
                         var id = btn.data("id");
-                        $('#LeaveTypeId').val(id);
-                        $('#allocateForm').submit();
+                        $('#LeaveTypeIdAllocate').val(id);
+                        $('#allocationForm').submit();
                     }
                 });
             });

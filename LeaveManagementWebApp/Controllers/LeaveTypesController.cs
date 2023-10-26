@@ -19,11 +19,13 @@ namespace LeaveManagementWebApp.Controllers
     {
         private readonly IMapper mapper;
         private readonly ILeaveTypeRepository leaveTypeRepository;
+        private readonly ILeaveAllocationRepository leaveAllocationRepository;
 
-        public LeaveTypesController(ILeaveTypeRepository leaveTypeRepository, IMapper mapper)
+        public LeaveTypesController(ILeaveTypeRepository leaveTypeRepository, IMapper mapper, ILeaveAllocationRepository leaveAllocationRepository)
         {
             this.leaveTypeRepository = leaveTypeRepository;
             this.mapper = mapper;
+            this.leaveAllocationRepository = leaveAllocationRepository;
         }
 
         // GET: LeaveTypes
@@ -142,16 +144,12 @@ namespace LeaveManagementWebApp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        //private async Task<bool> LeaveTypeExists(int id)
-        //{
-        //    return await leaveTypeRepository.Exists(id); ;
-        //}
-
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> AllocateLeave(int id)
-        //{           
-        //    return NotImplementedException();
-        //}
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AllocateLeave(int id)
+        {
+            await leaveAllocationRepository.LeaveAllocation(id);
+            return RedirectToAction(nameof(Index));
+        }
     }
 }
